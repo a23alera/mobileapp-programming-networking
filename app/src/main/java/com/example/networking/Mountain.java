@@ -1,6 +1,6 @@
 package com.example.networking;
 
-
+                  // ny klass
 public class Mountain {
     private String name;
 
