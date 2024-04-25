@@ -1,42 +1,73 @@
 
 # Rapport
-
-**Skriv din rapport här!**
-
-_Du kan ta bort all text som finns sedan tidigare_.
-
-## Följande grundsyn gäller dugga-svar:
-
-- Ett kortfattat svar är att föredra. Svar som är längre än en sida text (skärmdumpar och programkod exkluderat) är onödigt långt.
-- Svaret skall ha minst en snutt programkod.
-- Svaret skall inkludera en kort övergripande förklarande text som redogör för vad respektive snutt programkod gör eller som svarar på annan teorifråga.
-- Svaret skall ha minst en skärmdump. Skärmdumpar skall illustrera exekvering av relevant programkod. Eventuell text i skärmdumpar måste vara läsbar.
-- I de fall detta efterfrågas, dela upp delar av ditt svar i för- och nackdelar. Dina för- respektive nackdelar skall vara i form av punktlistor med kortare stycken (3-4 meningar).
-
-Programkod ska se ut som exemplet nedan. Koden måste vara korrekt indenterad då den blir lättare att läsa vilket gör det lättare att hitta syntaktiska fel.
-
+La till recyclerView i activity_main.xml layouten för att kunna visa listan över begsnamn. 
 ```
-function errorCallback(error) {
-    switch(error.code) {
-        case error.PERMISSION_DENIED:
-            // Geolocation API stöds inte, gör något
-            break;
-        case error.POSITION_UNAVAILABLE:
-            // Misslyckat positionsanrop, gör något
-            break;
-        case error.UNKNOWN_ERROR:
-            // Okänt fel, gör något
-            break;
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+...
+<androidx.recyclerview.widget.RecyclerView
+android:id="@+id/recyclerView"
+..
+ />
+``` 
+
+I minActivity.java las det till Arraylist med som var alla berg.och även konfugerade adapter och logken för att hämta och bearbeta JSON-data
+```
+protected void onCreate(Bundle savedInstanceState) {
+// Lista för att lagra bergsnamn
+private ArrayList<Mountain> mountainsList = new ArrayList<>(); 
+
+recyclerView = findViewById(R.id.recyclerView);
+
+// Konfigurera layout
+recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)); 
+
+adapter = new MountainAdapter(mountainsList); // Skapa adapter
+recyclerView.setAdapter(adapter);
+
+new JsonTask(this).execute(JSON_URL); // Starta nedladdning av JSON-data
+}
+```
+
+la till detta i JsonTask.java för att bearbeta JSON.data och lägga till alla bergsnamn i listan som är skapad.
+```
+@Override
+public void onPostExecute(String json) {
+    try {
+        JSONArray jsonArray = new JSONArray(json);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            String name = jsonObject.getString("name");
+            
+            // Lägg till bergsnamn i lista
+            mountainsList.add(new Mountain(name)); 
+        }
+        // Uppdatera RecyclerView
+        adapter.notifyDataSetChanged(); 
+    } catch (JSONException e) {
+        e.printstacktrace();
     }
 }
 ```
 
-Bilder läggs i samma mapp som markdown-filen.
+skapade även en recyclerview_item.xml för att kunna definiera layouten för objekten i RecyclerView. med hjälp av TextView
+```
+<androidx.constraintlayout.widget.ConstraintLayout
+    ....
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ....
+        />
+```
 
-![](android.png)
+I mountain klassen som skapdes så gjordes en geter för alla bergs namn och även en toString.
+```
+@Override                                       
+    public String toString() {                  
+        return "Mountain (name='" + name + "')";
+}                            
+```
 
-Läs gärna:
 
-- Boulos, M.N.K., Warren, J., Gong, J. & Yue, P. (2010) Web GIS in practice VIII: HTML5 and the canvas element for interactive online mapping. International journal of health geographics 9, 14. Shin, Y. &
-- Wunsche, B.C. (2013) A smartphone-based golf simulation exercise game for supporting arthritis patients. 2013 28th International Conference of Image and Vision Computing New Zealand (IVCNZ), IEEE, pp. 459–464.
-- Wohlin, C., Runeson, P., Höst, M., Ohlsson, M.C., Regnell, B., Wesslén, A. (2012) Experimentation in Software Engineering, Berlin, Heidelberg: Springer Berlin Heidelberg.
+![img.png](img.png)
