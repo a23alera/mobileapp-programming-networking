@@ -1,5 +1,7 @@
 
 # Rapport
+Ändrning: 
+Kunde inte uppnå att använda URL för att få information om alla berg kan vara påground av att jag använder min egna mac dator. Slutade med att jag fick använda filen mountains.json i assets mappen för att få alla information att kunna vissas upp. 
 La till recyclerView i activity_main.xml layouten för att kunna visa listan över begsnamn. 
 ```
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
