@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements JsonTask.JsonTaskListener {
 
-    private final String JSON_URL = "https://raw.githubusercontent.com/algolia/datasets/master/airports/airports.json";
+    private final String JSON_URL = "https://wwwlab.iit.his.se/brom/kurser/mobilprog/dbservice/admin/getdataasjson.php?login=brom";
     private RecyclerView recyclerView;
     private MountainAdapter adapter;
     private ArrayList<Mountain> mountainsList;
